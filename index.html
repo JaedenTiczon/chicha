@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Flower's Day Chicha - Tulip Edition</title>
+  <style>
+    body {
+      margin:0; padding:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    #container {
+      text-align: center;
+      z-index: 10;
+      position: relative;
+    }
+    #startBtn {
+      background: #d50032;
+      color: white;
+      font-size: 22px;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(213,0,50,0.7);
+      transition: background 0.3s ease;
+    }
+    #startBtn:hover {
+      background: #a10024;
+    }
+    svg {
+      width: 220px;
+      height: 300px;
+      margin: 20px auto 0 auto;
+      display: none;
+      cursor: default;
+      overflow: visible;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Stem animation */
+    #stem {
+      stroke: #0b3d0b;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      animation-fill-mode: forwards;
+      z-index: 1;
+      /* Clip the top 18px of stem */
+      clip-path: inset(18px 0 0 0);
+    }
+    /* Leaves fade in */
+    .leaves {
+      fill: #0b3d0b;
+      opacity: 0;
+      animation-fill-mode: forwards;
+      z-index: 1;
+    }
+    /* Tulip petals bloom */
+    #tulipPetals {
+      fill: url(#petalGradient);
+      transform-origin: 50% 90%;
+      transform-box: fill-box;
+      transform: scale(0);
+      animation-fill-mode: forwards;
+      z-index: 2;
+      filter: drop-shadow(0 0 2px #b10020);
+      position: relative;
+    }
+
+    /* Animations triggered after click */
+    .animate-stem {
+      animation: drawStem 1.4s forwards;
+    }
+    .animate-leaves {
+      animation: fadeInLeaves 1.1s forwards 1.4s;
+    }
+    .animate-petals {
+      animation: bloomTulip 1.4s forwards 2.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+
+    @keyframes drawStem {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+    @keyframes fadeInLeaves {
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes bloomTulip {
+      to {
+        transform: scale(1);
+      }
+    }
+
+    #loveMessage {
+      font-size: 24px;
+      color: #a10024;
+      font-weight: 700;
+      margin-top: 30px;
+      opacity: 0;
+      animation-fill-mode: forwards;
+      text-shadow: 1px 1px 3px #540016;
+    }
+    .fadeInMessage {
+      animation: fadeInMessage 2.2s forwards 4.1s;
+    }
+    @keyframes fadeInMessage {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Hearts effect */
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 18px;
+      background: #d50032;
+      transform: rotate(-45deg);
+      top: 50%;
+      left: 50%;
+      opacity: 0;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
+      filter: drop-shadow(0 0 2px #800000);
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 18px;
+      background: #d50032;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      left: 10px;
+      top: 0;
+    }
+
+    /* Floating hearts animations */
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translate(0,0) rotate(-45deg) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) rotate(-45deg) scale(0.5);
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div id="container">
+    <button id="startBtn">Happy Flower's day Chicha my love</button>
+    <svg id="tulipSvg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg" aria-label="Red tulip">
+      <defs>
+        <radialGradient id="petalGradient" cx="50%" cy="50%" r="70%">
+          <stop offset="0%" stop-color="#ff3b4e" />
+          <stop offset="60%" stop-color="#b10020" />
+          <stop offset="100%" stop-color="#800010" />
+        </radialGradient>
+      </defs>
+      <!-- Stem -->
+      <path id="stem" d="M50 150 Q52 100 50 70 Q48 40 50 20" fill="none" />
+      <!-- Leaves -->
+      <path class="leaves" d="M45 90 C55 85, 60 100, 50 105 C40 100, 45 90, 45 90 Z"/>
+      <path class="leaves" d="M55 110 C65 105, 70 120, 60 125 C50 120, 55 110, 55 110 Z"/>
+      <!-- Tulip petals -->
+      <path id="tulipPetals" d="M50 20 
+         C30 10, 30 60, 50 70
+         C70 60, 70 10, 50 20
+         Z"/>
+    </svg>
+    <div id="loveMessage">I love you Chicha my baby</div>
+  </div>
+
+<script>
+  const btn = document.getElementById('startBtn');
+  const tulip = document.getElementById('tulipSvg');
+  const stem = document.getElementById('stem');
+  const leaves = document.querySelectorAll('.leaves');
+  const petals = document.getElementById('tulipPetals');
+  const message = document.getElementById('loveMessage');
+  let heartsContainer;
+
+  function createHeartsContainer() {
+    heartsContainer = document.createElement('div');
+    heartsContainer.style.position = 'fixed';
+    heartsContainer.style.left = '0';
+    heartsContainer.style.top = '0';
+    heartsContainer.style.width = '100vw';
+    heartsContainer.style.height = '100vh';
+    heartsContainer.style.pointerEvents = 'none';
+    heartsContainer.style.overflow = 'visible';
+    document.body.appendChild(heartsContainer);
+  }
+
+  function spawnHeart() {
+    if (!heartsContainer) return;
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = `calc(50% + ${Math.random()*60 - 30}px)`;
+    heart.style.top = `calc(70% + ${Math.random()*40 - 20}px)`;
+    heart.style.setProperty('--x', `${Math.random()*40 - 20}px`);
+    heart.style.setProperty('--y', `-${50 + Math.random()*100}px`);
+    heart.style.animation = `floatUp 3s forwards`;
+    heartsContainer.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+  }
+
+  btn.addEventListener('click', () => {
+    btn.style.display = 'none';
+    tulip.style.display = 'block';
+
+    stem.classList.add('animate-stem');
+    setTimeout(() => {
+      leaves.forEach(leaf => leaf.classList.add('animate-leaves'));
+    }, 1400);
+    setTimeout(() => {
+      petals.classList.add('animate-petals');
+    }, 2500);
+    setTimeout(() => {
+      message.classList.add('fadeInMessage');
+    }, 4100);
+
+    createHeartsContainer();
+    let heartInterval = setInterval(spawnHeart, 400);
+    setTimeout(() => clearInterval(heartInterval), 10000);
+  });
+</script>
+</body>
+</html>
